@@ -1,9 +1,11 @@
-import './App.css';
+import "./App.css";
+import UserForm from "./components/userForm";
 
 function App() {
   return (
-    <div className="App">
-
+    <div>
+      <h1>User Form</h1>
+      <UserForm />
     </div>
   );
 }
