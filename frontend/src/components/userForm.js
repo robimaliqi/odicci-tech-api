@@ -15,7 +15,7 @@ class UserForm extends React.Component {
   handleSubmit(event) {
     console.log(event.target.first_name.value);
     axios
-      .post("/users", {
+      .post("http://localhost:3000/api/v1/users", {
         first_name: event.target.first_name.value,
         last_name: event.target.last_name.value,
         email: event.target.email.value,

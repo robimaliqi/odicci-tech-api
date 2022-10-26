@@ -15,8 +15,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_26_190340) do
     t.string "first_name"
     t.string "last_name"
     t.string "email"
-    t.integer "phone_number"
-    t.integer "date_of_birth"
+    t.string "phone_number"
+    t.date "date_of_birth"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
