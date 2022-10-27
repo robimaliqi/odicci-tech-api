@@ -23,6 +23,7 @@ class Api::V1::UsersController < ApplicationController
       # post to klaviyo
 
       url = URI("https://a.klaviyo.com/api/profiles/")
+      require "net/http"
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = true
 
@@ -41,11 +42,15 @@ class Api::V1::UsersController < ApplicationController
           last_name: @user.last_name
         }
         }}
-      request.body = "{\"data\":{\"type\":\"profile\"}}"
+      request.body = body.to_json
 
       response = http.request(request)
-      puts response.read_body
-      render json: @user, status: :created
+      if response.is_a?(Net::HTTPSuccess)
+        puts response.read_body
+        render json: @user, status: :created
+      else 
+        render json: response.read_body, status: :unprocessable_entity
+      end
     else
       render json: @user.errors, status: :unprocessable_entity
     end
