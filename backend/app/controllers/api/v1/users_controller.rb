@@ -1,6 +1,8 @@
 class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: %i[ show update destroy ]
 
+  # pk_ddb58c0be93b06ddd4bbb7111c98696e98
+
   # GET /users
   def index
     @users = User.all
@@ -19,6 +21,30 @@ class Api::V1::UsersController < ApplicationController
 
     if @user.valid?
       # post to klaviyo
+
+      url = URI("https://a.klaviyo.com/api/profiles/")
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = true
+
+      request = Net::HTTP::Post.new(url)
+      request["accept"] = 'application/json'
+      request["revision"] = '2022-10-17'
+      request["content-type"] = 'application/json'
+      request["Authorization"] = 'Klaviyo-API-Key pk_ddb58c0be93b06ddd4bbb7111c98696e98'
+      body = {data: {
+        type: :profile,
+        attributes: {
+          email: @user.email,
+          phone_number: @user.phone_number,
+          external_id: @user.id,
+          first_name: @user.first_name,
+          last_name: @user.last_name
+        }
+        }}
+      request.body = "{\"data\":{\"type\":\"profile\"}}"
+
+      response = http.request(request)
+      puts response.read_body
       render json: @user, status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
